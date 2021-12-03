@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h2>주제 : {{B.subject}}</h2>
+    <hr>
+    
+    <h5><img src="{{B.writerpic}}" class="rounded-circle" style="height: 20px;"> 글쓴자 : {{B.writer}} | 글쓴시 : {{B.pubdate}}</h5>
+    <hr>
+    <textarea disabled class="form-control">{{B.content}}</textarea>
+
+    <div class="mt-5">
+        
+    {% if B.writer == user.username %}
+        <a href="{%url 'board:update' B.id%}"><button type="button" class="btn btn-outline-secondary">수정</button></a>
+        <a href="{%url 'board:delete' B.id%}"><button type="button" class="btn btn-outline-secondary">삭제</button></a>
+        <a href="{%url 'board:index'%}"><button type="button" class="btn btn-outline-secondary">집으로</button></a>
+        {% else %}
+        <a href="{%url 'board:index'%}"><button type="button" class="btn btn-outline-secondary">집으로</button></a>
+        {% endif %}
+            {%if user in B.likey.all%}
+            <a href="{%url 'board:unlikey' B.id%}"><button class="btn btn-outline-secondary">싫어졌어요</button></a>
+            {%else%}
+            <a href="{%url 'board:likey' B.id%}"><button class="btn btn-outline-secondary">좋아요</button></a>
+            
+            
+                {%endif%}
+        
+                  
+
+        좋아요 수 : {{B.likey.count}}
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            북마크추가
+        </button>
+    </div>
+    <hr>
+
+    {%if R%}
+    {%for i in R%}
+        <div class="row mt-5">
+            
+
+                <div class = "col-lg-1">
+                    <img src="{{i.replyerpic}}" width="50px">
+                </div>
+                <div class = "col-lg-10">
+                    <textarea class="form-control">{{i.replyer}} | {{i.comment}}</textarea>            
+                </div>
+                <div class="col-lg-1">
+                    {% if user.username == i.replyer%}
+
+                    <a href="{% url 'board:remove_reply' B.id i.id%}"><button  class="btn btn-outline-secondary"> X </button></a>
+
+                    {%endif%}
+                </div>
+
+        
+        </div>
+        {%endfor%}
+        {%endif%}
+
+        <br>
+
+    <form method="post" action="{% url 'board:create_reply' B.id %}">
+        {%csrf_token%}
+        <div class="row">
+            <div class="col-lg-10">
+                <input name="comment" type="text" class="form-control">
+            </div>
+            <div class="col-lg-2">
+                <button class ="btn btn-primary">댓달기</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+
+            <form method="post" action="{% url 'book:create' %}">
+            {%csrf_token%}
+            <div class="modal-body">
+            북마크 추가하고싶으면 별
+                <br>
+                <textarea name="comment" class="form-control" placeholder="페이지 메모"></textarea>
+                <br>
+                <div class="text-end">
+                    <input name="inpo" type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btn-check-outlined">☆</label><br>
+                    <input type="hidden" name="name" value="[BOARD]{{B.subject}}">
+                    <input type="hidden" name="url" value="{{request.path}}">
+                </div>
+            </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">안할래요</button>
+                <button class="btn btn-primary">저장할래</button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+</div>
+{% endblock%}

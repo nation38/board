@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5 mb-5">
+
+    <h1>번역기</h1>
+    <hr>
+
+    <form method="POST">
+        {%csrf_token%}
+        <div class="row mt-5">
+            <div class="col-lg-5">
+                <h4>BEFORE</h4>
+                <textarea name="before" class="form-control mt-3" style="font-size: 30px; height: 300px;" placeholder="번역할 문장 입력.">{{won}}</textarea>
+            </div>
+            <div class="col-lg-2 text-center" style="margin:auto">
+
+                <h4>FROM</h4>
+                <select class="form-select" name="from" size="3" aria-label="size 3 select example">
+                    <option value="ko"{% if from == "ko" %}selected{% endif %} >Korean</option>
+                    <option value="en"{% if from == "en" %}selected{% endif %}>English</option>
+                    <option value="ja"{% if from == "ja" %}selected{% endif %}>Japanese</option>
+                    <option value="it"{% if from == "it" %}selected{% endif %}>Italian</option>
+                    <option value="el"{% if from == "el" %}selected{% endif %}>Greek</option>
+                </select>
+
+                <button class="btn btn-secondary mt-3 mb-3">번역</button>
+
+                <h4>TO</h4>
+                <select class="form-select" name="to" size="3" aria-label="size 3 select example">
+                    <option value="ko" {% if to == "ko" %}selected{% endif %}>Korean</option>
+                    <option value="en"{% if to == "en" %}selected{% endif %}>English</option>
+                    <option value="ja"{% if to == "ja" %}selected{% endif %}>Japanese</option>
+                    <option value="it"{% if to == "it" %}selected{% endif %}>Italian</option>
+                    <option value="el"{% if to == "el" %}selected{% endif %}>Greek</option>
+                </select>
+
+
+            </div>
+            <div class="col-lg-5">
+                <h4>AFTER</h4>
+                <textarea disabled="" class="form-control mt-3" style="height: 300px; font-size: 30px;">{% if A %}{{A}}{%endif%}</textarea>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

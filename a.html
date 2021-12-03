@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5 mb-5">
+
+    <h1>{{to.subject}}</h1>
+    <div class="text-end">
+        {{to.writer}}
+    </div>
+    <textarea class="form-control" disabled style="font-size: 40px;">{{to.content}}</textarea>
+    <hr>
+    <div class="row">
+        {%if user in to.voter.all %}
+            {% for i in clist%}
+            <div class="text-center col-lg-4 mt-4">
+                <div class="form-check mb-5">
+                    
+                    <label class="form-check-label" for="exampleRadios1">
+                     <h4><b>{{i.name}}</b></h4> 
+                    </label>
+                    <img src="{{i.pic.url}}" height="200px">
+                    <textarea disabled class="form-control">{{i.comment}}</textarea>
+                  </div>
+            </div>
+            {% endfor %}
+            <a href="{%url 'vote:cancel' to.id %}"><button class="btn btn-outline-secondary">투표가싫음</button></a>
+        {% else %}
+        <form method="post" action="{%url 'vote:vote' to.id%}">
+        {% csrf_token %}
+        {% for i in clist %}
+        <div class="col-lg-4 mt-4 text-center">
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="radio" name="choice" value="{{i.id}}" id="exampleRadios{{i.id}}" value="option1" {%if forloop.first%}checked {%endif%}>
+                <label class="form-check-label" for="exampleRadios{{i.id}}">
+                <h4><b>{{i.name}}</b></h4> 
+                </label>
+                <textarea disabled class="form-control">{{i.comment}}</textarea>
+            </div>
+            <img src="{{i.pic.url}}" height="200px">
+        </div>
+        {% endfor %}
+        <button class="btn btn-outline-secondary">전송</button>
+        </form>
+        {%endif%}
+    </div>
+
+
+</div>
+
+
+{%endblock%}

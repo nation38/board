@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load mathfilters %}
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h1><b>BOARD</b></h1>
+    <hr>
+
+    <div class="text-end">
+        <a href="{% url 'board:create' %}"><button type="button" class="btn btn-outline-secondary">글쓰기</button></a>
+
+
+    </div>
+
+        <table class="table table-hover mt-4">
+            <thead style="background-color: rgb(255, 255, 255);">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">주제</th>
+                <th scope="col">내용엿보기</th>
+                <th scope="col">글쓴이</th>
+                <th scope="col">좋은가?</th>
+            </tr>
+            </thead>
+            <tbody>
+            {%for i in B%}
+            <tr>
+                <th scope="row">{{B.start_index|add:forloop.counter0}}</th>
+                <td><a href="{% url 'board:read' i.id %}">{{i.subject}}</a></td>
+                <td>{{i.summary}}</td>
+                <td>{{i.writer}}</td>
+                <td>{{i.likey.count}}</td>
+                
+            </tr>
+            {%endfor%}
+            </tbody>
+        </table>
+
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% if B.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'board:index'%}?page=1">홈</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="{%url 'board:index' %}?page={{B.number|sub:1}}"><</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link">홈</a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" ><</a>
+                </li>
+                {% endif %}
+                
+                
+                {% for i in B.paginator.page_range %}
+                {% if i >= B.number|sub:1|intdiv:10|mul:10|add:1 and B.number|sub:1|intdiv:10|add:1|mul:10 >= i %}
+                <li class="page-item {% if B.number == i %}active{%endif%}"><a class="page-link" href="{% url 'board:index'%}?page={{i}}">{{i}}</a></li>
+                {%endif%}
+                {% endfor %}
+
+                {% if B.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{%url 'board:index' %}?page={{B.number|add:1}}">></a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="{%url 'board:index' %}?page={{B.paginator.num_pages}}">끝</a>
+                </li>
+                {%else%}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">></a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">끝</a>
+                </li>
+                {%endif%}
+            </ul>
+        </nav>
+        <form>
+            <div class="row text-center">
+                <div class="col-lg-2">
+                    <select name="cate" class="form-select" aria-label="Default select example">
+                        <option {% if 1 == cate %}selected{% endif %} value="1">제목</option>
+                        <option {% if 2 == cate %}selected{% endif %} value="2">글쓴이</option>
+                        <option {% if 3 == cate %}selected{% endif %} value="3">내용</option>
+                    </select>
+                </div>
+                <div class="col-lg-9">
+                    <input value="{{kw}}" name="kw" type="text" class="form-control">
+                </div>
+                <div class="col-lg-1">
+                    <button class="btn btn-primary">search</button>
+                </div>
+            </div>
+        </form>
+
+</div>
+
+<style>
+    a {
+        text-decoration: white; font-weight: 500;
+    }
+    a:hover{
+        color: rgb(58, 58, 153);
+    }
+</style>
+
+{% endblock %}

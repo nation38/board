@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div class="container mt-5">
+    <h1><b>글 적 기</b></h1>
+    <hr>
+    <form method="post">
+
+        {% csrf_token %}
+        <div class="mt-4 mb-4 input-group input-group-lg">
+            <span class="input-group-text" id="inputGroup-sizing-lg">주 제</span>
+            <input name="subject" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+        </div>
+        
+        <div class="mt-4 mb-4 input-group input-group-lg">
+            <span class="input-group-text" id="inputGroup-sizing-lg">작 성 자</span>
+            <input value="{{user.nickname}}" disabled class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+        </div>
+        
+        <div class="mt-4 mb-4 input-group input-group-lg">
+            <span class="input-group-text" id="inputGroup-sizing-lg">내 용 물</span>
+            <textarea name="content" class="form-control" style="height: 400px;"></textarea>
+        </div>
+
+        <div class="text-end">
+
+            <button type="submit" class="btn btn-outline-secondary">작 성 하 라</button>
+
+        </div>
+    </form>
+</div>
+
+{% endblock %}
